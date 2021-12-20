@@ -5,7 +5,7 @@ let ball;
 
 function setup() {
   createCanvas(800, 600);
-  console.log("Hello World");
+  console.log("Hello World123");
 
   // create an engine
   let engine = Matter.Engine.create();
