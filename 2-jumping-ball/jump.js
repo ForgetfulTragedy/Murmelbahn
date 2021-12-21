@@ -3,6 +3,7 @@ let blockB;
 let ground;
 let ball;
 let blocks=[];
+let blockGröße = 80;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -16,7 +17,7 @@ function setup() {
   ball= new Ball(
     world,
     {x: 200, y: 200, r:40,color: 'blue'},
-    {isStatic: false, density: 0.1});
+    {isStatic: false, density: 0.15 });
 
   blocks.push(ball);
   // create two boxes and a ground
@@ -25,15 +26,40 @@ function setup() {
     { x: windowWidth/2, y: 700, w: windowWidth, h: 20, color: 'grey' },
     { isStatic: true});
 
-//klappt noch nicht!!!
-    block = new Block(
+    blocks.push( new Block(
       world,
-      {x: windowWidth/2, y:700, w: 80, h: 80, color: 'white'},
-      {isStatic: false}
-    );
+      {x: windowWidth/2, y:700-blockGröße/2, w: blockGröße, h: blockGröße, color: 'white'},
+      {isStatic: true}
+    ));
+    blocks.push( new Block(
+      world,
+      {x: windowWidth/2+blockGröße, y:700-blockGröße/2, w: blockGröße, h: blockGröße, color: 'pink'},
+      {isStatic: true}
+    ));
+    blocks.push( new Block(
+      world,
+      {x: windowWidth/2+blockGröße, y:700-1.5*blockGröße, w: blockGröße, h: blockGröße, color: 'green'},
+      {isStatic: true}
+    ));
+    blocks.push( new Block(
+      world,
+      {x: windowWidth/2+2*blockGröße, y:700-0.5*blockGröße, w: blockGröße, h: blockGröße, color: 'blue'},
+      {isStatic: true}
+    ));
+    blocks.push( new Block(
+      world,
+      {x: windowWidth/2+2*blockGröße, y:700-1.5*blockGröße, w: blockGröße, h: blockGröße, color: 'brown'},
+      {isStatic: true}
+    ));
+    blocks.push( new Block(
+      world,
+      {x: windowWidth/2+2*blockGröße, y:700-2.5*blockGröße, w: blockGröße, h: blockGröße, color: 'red'},
+      {isStatic: true}
+    ));
   // run the engine
   Matter.Runner.run(engine);
 }
+
 
 //jump
 function keyPressed(){
