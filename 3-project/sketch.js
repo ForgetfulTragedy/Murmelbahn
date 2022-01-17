@@ -1,7 +1,8 @@
-
 let ground;
 let ball;
 let tisch;
+let kopfImg;
+let mouse;
 
 function setup() {
   createCanvas(1280, 720);
@@ -11,19 +12,25 @@ function setup() {
   let engine = Matter.Engine.create();
   let world = engine.world;
 
-  // create a ground
-  ground = new Block(world, { x:400 , y: 700, w: windowWidth * 1.5, h: 15, color: 'pink' }, { isStatic: true});
+  //load images
+  kopfImg = loadImage('kopf.png');
 
-  //Tisch
-  beinA = new Block(world,{ x:100 , y: 610, w: 10, h: 160, color: 'white' }, { isStatic: true});
+  //add bodies
+  ball = new SpriteBall(world, { x: 100, y: 50, r: 25, image: kopfImg});
+
+  // create a ground
+  ground = new Block(world, { x:400 , y: 300, w: windowWidth * 1.5, h: 15, color: 'pink' }, { isStatic: true, angle: Math.PI * 0.06});
+
+  //setup mouse
+  mouse = new Mouse(engine, canvas);
+
   // run the engine
   Matter.Runner.run(engine);
 }
 
 function draw() {
-  background('black');
+  background (255);
+  ball.draw();
   ground.draw();
-  beinA.draw();
-  beinB.draw();
-  tischplatte.draw();
+  mouse.draw();
 }
