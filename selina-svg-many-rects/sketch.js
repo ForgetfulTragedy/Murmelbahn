@@ -5,6 +5,8 @@ let slides = [];
 let kopfImg;
 let ball;
 let box;
+let platform;
+let clown;
 let mouse;
 let hitSound;
 let audio;
@@ -31,7 +33,7 @@ function setup() {
     const x = (i % 2 == 0) ? 250 : 650;
     const a = (i % 2 == 0) ? Math.PI * 0.06 : Math.PI * -0.06;
     slides.push(
-//      blockA = new Block(world, { x: 1200, y: 430, w: 2400, h: 15, color: 'grey' }, { isStatic: true })
+      //      blockA = new Block(world, { x: 1200, y: 430, w: 2400, h: 15, color: 'grey' }, { isStatic: true })
     );
   }
 
@@ -40,10 +42,10 @@ function setup() {
   // });
 
   //Blocks[19] soll label 'knopf' bekommen
-    blocks[19].body.label= 'knopf';
+  blocks[19].body.label = 'knopf';
 
   //Blocks[18] soll höhere Restitution bekommen
-    blocks[18].body.restitution = 8;
+  blocks[18].body.restitution = 8;
 
 
   // svgRects = document.getElementsByTagName('rect');
@@ -107,12 +109,32 @@ function setup() {
   ground = new Block(world, {
     x: 1200,
     y: 430,
-    w: 240,
+    w: 2400,
     h: 15,
     color: 'grey'
   }, {
     isStatic: true
   });
+  platform = new Block(world, {
+    x: 1435,
+    y: 200,
+    w: 68,
+    h: 20,
+    color: 'yellow'
+  }, {
+    isStatic: true,
+  });
+  clown = new Block(world, {
+    x: 1340,
+    y: 200,
+    w: 50,
+    h: 50,
+    color: 'red'
+  }, {
+    isStatic: true,
+    restitution: 4
+  });
+
 
   //setup mouse
   mouse = new Mouse(engine, canvas);
@@ -132,6 +154,22 @@ function setup() {
   // run the engine
   Matter.Runner.run(engine);
 }
+
+function platformMove(){
+let oscillatePosY = 200 + Math.sin(frameCount * 0.01) * 100;
+  Matter.Body.setPosition(
+    platform.body,
+    {x: platform.body.position.x, y: oscillatePosY}
+  );
+}
+function clownMove(){
+let oscillatePosY = 360 + Math.sin(frameCount * 0.06) * 40;
+  Matter.Body.setPosition(
+    clown.body,
+    {x: clown.body.position.x, y: oscillatePosY}
+  );
+}
+
 
 //jump
 function keyPressed(e) {
@@ -158,18 +196,22 @@ function draw() {
   ground.draw();
   ball.draw();
   box.draw();
+  platform.draw();
+  clown.draw();
   mouse.draw();
   for (let b of blocks) {
-  //   b.draw();
+    //   b.draw();
   }
   for (let s of slides) {
-  s.draw();
-}
-// follow the ball by scrolling the window
-scrollFollow(ball);
+    s.draw();
+  }
+  // follow the ball by scrolling the window
+  scrollFollow(ball);
+  platformMove();
+  clownMove();
+
 
 }
-
 
 function scrollFollow(object) {
   if (insideViewport(object) == false) {
@@ -187,9 +229,9 @@ function insideViewport(object) {
   const x = object.body.position.x;
   const y = object.body.position.y;
   const pageXOffset = window.pageXOffset || document.documentElement.scrollLeft;
-  const pageYOffset  = window.pageYOffset || document.documentElement.scrollTop;
+  const pageYOffset = window.pageYOffset || document.documentElement.scrollTop;
   if (x >= pageXOffset && x <= pageXOffset + windowWidth &&
-      y >= pageYOffset && y <= pageYOffset + windowHeight) {
+    y >= pageYOffset && y <= pageYOffset + windowHeight) {
     return true;
   } else {
     return false;

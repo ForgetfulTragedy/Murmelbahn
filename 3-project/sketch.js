@@ -18,7 +18,7 @@ function setup() {
 
   //add bodies
   ball = new SpriteBall(world, { x: 100, y: 50, r: 25, image: kopfImg});
-  platform = new Block(world, { x: 600, y: 200, w: 160, h: 20, color: 'black'},{isStatic: true });
+  platform = new Block(world, { x: 600, y: 200, w: 160, h: 20, color: 'black'},{isStatic: true, restitution: 4 });
 
   // create a ground
   ground = new Block(world, { x:400 , y: 300, w: windowWidth * 1.5, h: 15, color: 'pink' }, { isStatic: true, angle: Math.PI * 0.06});
