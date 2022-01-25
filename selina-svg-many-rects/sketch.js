@@ -31,7 +31,7 @@ function setup() {
     const x = (i % 2 == 0) ? 250 : 650;
     const a = (i % 2 == 0) ? Math.PI * 0.06 : Math.PI * -0.06;
     slides.push(
-      blockA = new Block(world, { x: 1200, y: 430, w: 2400, h: 15, color: 'grey' }, { isStatic: true })
+//      blockA = new Block(world, { x: 1200, y: 430, w: 2400, h: 15, color: 'grey' }, { isStatic: true })
     );
   }
 
@@ -105,9 +105,9 @@ function setup() {
   });
 
   ground = new Block(world, {
-    x: 400,
+    x: 1200,
     y: 430,
-    w: 810,
+    w: 240,
     h: 15,
     color: 'grey'
   }, {
@@ -170,12 +170,6 @@ scrollFollow(ball);
 
 }
 
-function keyPressed(e) {
-  // prevent accidentally scrolling of website with SPACE key
-  if(e.keyCode == 32 && e.target == document.body) {
-    e.preventDefault();
-  }
-}
 
 function scrollFollow(object) {
   if (insideViewport(object) == false) {
