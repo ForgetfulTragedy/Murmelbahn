@@ -1,5 +1,7 @@
 let ground;
 let blocks = [];
+let blockA;
+let slides = [];
 let kopfImg;
 let ball;
 let box;
@@ -24,6 +26,14 @@ function setup() {
   const canvas = createCanvas(2455, 600);
   // let engine = Matter.Engine.create();
   // let world = engine.world;
+  for (let i = 0; i < 9; i++) {
+    // alternate x postion and angle based on whether i is even or odd
+    const x = (i % 2 == 0) ? 250 : 650;
+    const a = (i % 2 == 0) ? Math.PI * 0.06 : Math.PI * -0.06;
+    slides.push(
+      blockA = new Block(world, { x: 1200, y: 430, w: 2400, h: 15, color: 'grey' }, { isStatic: true })
+    );
+  }
 
   // new BlocksFromSVG(world, "svgRects2.svg", blocks, {
   //   isStatic: true
@@ -150,6 +160,44 @@ function draw() {
   box.draw();
   mouse.draw();
   for (let b of blocks) {
-     b.draw();
+  //   b.draw();
+  }
+  for (let s of slides) {
+  s.draw();
+}
+// follow the ball by scrolling the window
+scrollFollow(ball);
+
+}
+
+function keyPressed(e) {
+  // prevent accidentally scrolling of website with SPACE key
+  if(e.keyCode == 32 && e.target == document.body) {
+    e.preventDefault();
+  }
+}
+
+function scrollFollow(object) {
+  if (insideViewport(object) == false) {
+    const $element = $('html, body');
+    if ($element.is(':animated') == false) {
+      $element.animate({
+        scrollLeft: object.body.position.x,
+        scrollRight: object.body.position.y
+      }, 750);
+    }
+  }
+}
+
+function insideViewport(object) {
+  const x = object.body.position.x;
+  const y = object.body.position.y;
+  const pageXOffset = window.pageXOffset || document.documentElement.scrollLeft;
+  const pageYOffset  = window.pageYOffset || document.documentElement.scrollTop;
+  if (x >= pageXOffset && x <= pageXOffset + windowWidth &&
+      y >= pageYOffset && y <= pageYOffset + windowHeight) {
+    return true;
+  } else {
+    return false;
   }
 }
