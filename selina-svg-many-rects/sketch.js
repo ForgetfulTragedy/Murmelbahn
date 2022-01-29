@@ -5,7 +5,8 @@ let slides = [];
 let kopfImg;
 let ball;
 let kugel;
-let platform;
+let ballon;
+let ballonImg;
 let clown;
 let clownImg;
 let mouse;
@@ -93,6 +94,7 @@ function setup() {
   tatzelImg = loadImage('Tatze1.png');
   tatzerImg = loadImage('Tatze2.png');
   clownImg = loadImage('clown.png');
+  ballonImg = loadImage('ballon.png');
 
   //add bodies
   ball = new SpriteBall(world, {
@@ -146,21 +148,22 @@ function setup() {
     isStatic: true
   });
 
-  platform = new Block(world, {
-  x: 1435,
-  y: 260,
+  ballon = new SpriteBlock(world, {
+  x: 1480,
+  y: 280,
   w: 68,
   h: 20,
-  color: 'yellow'
+  color: 'yellow',
+  image: ballonImg
 }, {
   isStatic: true,
 });
 
 clown = new SpriteBlock(world, {
-  x: 1340,
-  y: 200,
-  w: 50,
-  h: 50,
+  x: 1342,
+  y: 290,
+  w: 85,
+  h: 85,
   color: 'red',
   image: clownImg
 }, {
@@ -204,16 +207,16 @@ let oscillatePosY = 215+ Math.cos(frameCount * 0.05) * 20;
   );
 }
 
-function platformMove(){
-let oscillatePosX = 1500 + Math.sin(frameCount * 0.01) * 100;
+function ballonMove(){
+let oscillatePosX = ballon.body.position.x + Math.sin(frameCount * 0.03) * 2;
   Matter.Body.setPosition(
-    platform.body,
-    {x: oscillatePosX, y: platform.body.position.y}
+    ballon.body,
+    {x: oscillatePosX, y: ballon.body.position.y}
   );
 }
 
 function clownMove(){
-let oscillatePosY = 360 + Math.sin(frameCount * 0.06) * 40;
+let oscillatePosY = clown.body.position.y + Math.sin(frameCount * 0.03) * 2;
   Matter.Body.setPosition(
     clown.body,
     {x: clown.body.position.x, y: oscillatePosY}
@@ -247,7 +250,7 @@ function draw() {
   kugel.draw();
   tatzeL.draw();
   tatzeR.draw();
-  platform.draw();
+  ballon.draw();
   clown.draw();
 
   mouse.draw();
@@ -263,7 +266,7 @@ function draw() {
 //Call functions!!
 tatzeLMove();
 tatzeRMove();
-platformMove();
+ballonMove();
 clownMove();
 
 //scrollFollow(ball);
