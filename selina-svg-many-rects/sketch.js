@@ -4,12 +4,18 @@ let blockA;
 let slides = [];
 let kopfImg;
 let ball;
-let box;
+let kugel;
 let platform;
 let clown;
+let clownImg;
 let mouse;
 let hitSound;
 let audio;
+let tatzeL;
+let tatzelImg;
+let tatzeR;
+let tatzerImg;
+
 let engine = Matter.Engine.create();
 let world = engine.world;
 
@@ -28,12 +34,13 @@ function setup() {
   const canvas = createCanvas(2455, 600);
   // let engine = Matter.Engine.create();
   // let world = engine.world;
+
   for (let i = 0; i < 9; i++) {
     // alternate x postion and angle based on whether i is even or odd
     const x = (i % 2 == 0) ? 250 : 650;
     const a = (i % 2 == 0) ? Math.PI * 0.06 : Math.PI * -0.06;
     slides.push(
-      //      blockA = new Block(world, { x: 1200, y: 430, w: 2400, h: 15, color: 'grey' }, { isStatic: true })
+      blockA = new Block(world, { x: 1200, y: 445, w: 2400, h: 15, color: 'red' }, { isStatic: true })
     );
   }
 
@@ -42,10 +49,10 @@ function setup() {
   // });
 
   //Blocks[19] soll label 'knopf' bekommen
-  blocks[19].body.label = 'knopf';
+    blocks[19].body.label= 'knopf';
 
   //Blocks[18] soll höhere Restitution bekommen
-  blocks[18].body.restitution = 8;
+    blocks[18].body.restitution = 8;
 
 
   // svgRects = document.getElementsByTagName('rect');
@@ -83,58 +90,83 @@ function setup() {
 
   //load images
   kopfImg = loadImage('kopf.png');
+  tatzelImg = loadImage('Tatze1.png');
+  tatzerImg = loadImage('Tatze2.png');
+  clownImg = loadImage('clown.png');
 
   //add bodies
-  box = new Block(world, {
-    x: 150,
-    y: 200,
-    w: 40,
-    h: 20,
-    color: 'grey'
-  }, {
-    isStatic: true,
-    restitution: 0.8,
-    label: 'knopf'
-  });
-
   ball = new SpriteBall(world, {
-    x: 100,
-    y: 50,
+    x: 70,
+    y: 220,
     r: 10,
     image: kopfImg
   }, {
-    label: 'ball'
+    label: 'ball',
+    //friction: 0.09
+  });
+
+  kugel = new Ball(world, {
+    x: -80,
+    y: 100,
+    r: 10,
+    color: 'red'
+  }, {
+    friction: 0.001
   });
 
   ground = new Block(world, {
-    x: 1200,
-    y: 430,
-    w: 2400,
+    x: - 100,
+    y: 180,
+    w: 200,
     h: 15,
-    color: 'grey'
-  }, {
-    isStatic: true
-  });
-  platform = new Block(world, {
-    x: 1435,
-    y: 200,
-    w: 68,
-    h: 20,
-    color: 'yellow'
-  }, {
-    isStatic: true,
-  });
-  clown = new Block(world, {
-    x: 1340,
-    y: 200,
-    w: 50,
-    h: 50,
     color: 'red'
   }, {
     isStatic: true,
-    restitution: 4
+    angle: 145
   });
 
+  //add Tatzen(Bär)
+  tatzeL = new SpriteBlock(world, {
+    x: 793,
+    y: 235,
+    w: 27,
+    h: 25,
+    image: tatzelImg
+  },{
+    isStatic: true
+  });
+
+  tatzeR = new SpriteBlock(world, {
+    x: 855,
+    y: 235,
+    w: 30,
+    h: 26,
+    image: tatzerImg
+  },{
+    isStatic: true
+  });
+
+  platform = new Block(world, {
+  x: 1435,
+  y: 260,
+  w: 68,
+  h: 20,
+  color: 'yellow'
+}, {
+  isStatic: true,
+});
+
+clown = new SpriteBlock(world, {
+  x: 1340,
+  y: 200,
+  w: 50,
+  h: 50,
+  color: 'red',
+  image: clownImg
+}, {
+  isStatic: true,
+  restitution: 4
+});
 
   //setup mouse
   mouse = new Mouse(engine, canvas);
@@ -155,13 +187,31 @@ function setup() {
   Matter.Runner.run(engine);
 }
 
-function platformMove(){
-let oscillatePosY = 200 + Math.sin(frameCount * 0.01) * 100;
+//Tatzen
+function tatzeLMove(){
+let oscillatePosY = 215+ Math.sin(frameCount * 0.05) * 20;
   Matter.Body.setPosition(
-    platform.body,
-    {x: platform.body.position.x, y: oscillatePosY}
+    tatzeL.body,
+    {x: tatzeL.body.position.x, y: oscillatePosY}
   );
 }
+
+function tatzeRMove(){
+let oscillatePosY = 215+ Math.cos(frameCount * 0.05) * 20;
+  Matter.Body.setPosition(
+    tatzeR.body,
+    {x: tatzeR.body.position.x, y: oscillatePosY}
+  );
+}
+
+function platformMove(){
+let oscillatePosX = 1500 + Math.sin(frameCount * 0.01) * 100;
+  Matter.Body.setPosition(
+    platform.body,
+    {x: oscillatePosX, y: platform.body.position.y}
+  );
+}
+
 function clownMove(){
 let oscillatePosY = 360 + Math.sin(frameCount * 0.06) * 40;
   Matter.Body.setPosition(
@@ -169,7 +219,6 @@ let oscillatePosY = 360 + Math.sin(frameCount * 0.06) * 40;
     {x: clown.body.position.x, y: oscillatePosY}
   );
 }
-
 
 //jump
 function keyPressed(e) {
@@ -180,10 +229,10 @@ function keyPressed(e) {
         y: ball.body.position.y
       }, {
         x: 0.002,
-        y: -0.008
-      }
-    );
+        y: -0.007
+      });
   }
+
   // prevent accidentally scrolling of website with SPACE key
   if (e.keyCode == 32 && e.target == document.body) {
     e.preventDefault();
@@ -195,21 +244,29 @@ function draw() {
   clear();
   ground.draw();
   ball.draw();
-  box.draw();
+  kugel.draw();
+  tatzeL.draw();
+  tatzeR.draw();
   platform.draw();
   clown.draw();
-  mouse.draw();
-  for (let b of blocks) {
-    //   b.draw();
-  }
-  for (let s of slides) {
-    s.draw();
-  }
-  // follow the ball by scrolling the window
-  scrollFollow(ball);
-  platformMove();
-  clownMove();
 
+  mouse.draw();
+
+  for (let b of blocks) {
+     //b.draw();
+  }
+
+  for (let s of slides) {
+  s.draw();
+}
+
+//Call functions!!
+tatzeLMove();
+tatzeRMove();
+platformMove();
+clownMove();
+
+//scrollFollow(ball);
 
 }
 
@@ -218,7 +275,7 @@ function scrollFollow(object) {
     const $element = $('html, body');
     if ($element.is(':animated') == false) {
       $element.animate({
-        scrollLeft: object.body.position.x,
+        scrollLeft: object.body.position.x-100,
         scrollRight: object.body.position.y
       }, 750);
     }
@@ -229,9 +286,9 @@ function insideViewport(object) {
   const x = object.body.position.x;
   const y = object.body.position.y;
   const pageXOffset = window.pageXOffset || document.documentElement.scrollLeft;
-  const pageYOffset = window.pageYOffset || document.documentElement.scrollTop;
+  const pageYOffset  = window.pageYOffset || document.documentElement.scrollTop;
   if (x >= pageXOffset && x <= pageXOffset + windowWidth &&
-    y >= pageYOffset && y <= pageYOffset + windowHeight) {
+      y >= pageYOffset && y <= pageYOffset + windowHeight) {
     return true;
   } else {
     return false;
