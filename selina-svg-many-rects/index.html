@@ -12,7 +12,10 @@
   <script language="javascript" type="text/javascript" src="../classes/BlockCore.js"></script>
   <script language="javascript" type="text/javascript" src="../classes/Block.js"></script>
   <script language="javascript" type="text/javascript" src="../classes/BlocksFromSVG.js"></script>
+  <script language="javascript" type="text/javascript" src="../classes/Polygon.js"></script>
   <script language="javascript" type="text/javascript" src="../classes/PolygonFromSVG.js"></script>
+  <script language="javascript" type="text/javascript" src="../classes/PolygonFromPoints.js"></script>
+  <script language="javascript" type="text/javascript" src="../classes/PolygonSpriteFromSVG.js"></script>
   <script language="javascript" type="text/javascript" src="../classes/SpriteBlock.js"></script>
   <script language="javascript" type="text/javascript" src="../classes/Ball.js"></script>
   <script language="javascript" type="text/javascript" src="../classes/SpriteBall.js"></script>
@@ -22,28 +25,39 @@
       padding: 0;
       margin: 0;
     }
-    img {
+
+    /* img {
       height: 720px;
       position: absolute;
       z-index: -1;
       pointer-events: none;
-    }
-    /*
+    } */
+
     #sprite-background {
     position: absolute;
-    width: 1600px;
-    height: 600px;
-    background: url('haus.png') no-repeat;
+    width: 4910px;
+    height: 720px;
+    background: url('zimmer.png') no-repeat;
     z-index: -1;
-    } */
+    }
+
+    #sprite-foreground {
+    position: absolute;
+    width: 4910px;
+    height: 720px;
+    background: url('overlay.png') no-repeat;
+    z-index: 1;
+    pointer-events: none;
+    }
 
 
   </style>
 </head>
 
 <body>
-<img src= "haus.jpg"/>
-  <!-- <div id="sprite-background"></div> -->
+<!-- <img src= "zimmer.png"/> -->
+<div id="sprite-background"></div>
+<div id="sprite-foreground"></div>
 
 </body>
 

@@ -1,4 +1,5 @@
 let ground;
+let ground2;
 let blocks = [];
 let blockA;
 let slides = [];
@@ -11,6 +12,7 @@ let audio;
 
 let balloon;
 let balloonImg;
+let korb;
 
 let clown;
 let clownImg;
@@ -24,6 +26,9 @@ let tatzeL;
 let tatzelImg;
 let tatzeR;
 let tatzerImg;
+
+let buch;
+let buchImg;
 
 let engine = Matter.Engine.create();
 let world = engine.world;
@@ -41,27 +46,29 @@ function preload() {
 
 function setup() {
   const canvas = createCanvas(4910, 720);
-  // let engine = Matter.Engine.create();
-  // let world = engine.world;
 
   for (let i = 0; i < 9; i++) {
     // alternate x postion and angle based on whether i is even or odd
     const x = (i % 2 == 0) ? 250 : 650;
     const a = (i % 2 == 0) ? Math.PI * 0.06 : Math.PI * -0.06;
     slides.push(
-      blockA = new Block(world, { x: 1200, y: 675, w: 49100, h: 15, color: 'red' }, { isStatic: true })
+      blockA = new Block(world, {
+        x: 1200,
+        y: 675,
+        w: 6600,
+        h: 15,
+        color: 'red'
+      }, {
+        isStatic: true
+      })
     );
   }
 
-  // new BlocksFromSVG(world, "svgRects2.svg", blocks, {
-  //   isStatic: true
-  // });
-
   //Blocks[19] soll label 'knopf' bekommen
-    blocks[18].body.label= 'knopf';
+  blocks[19].body.label = 'knopf';
 
   //Blocks[18] soll höhere Restitution bekommen
-    blocks[17].body.restitution = 10;
+  blocks[18].body.restitution = 10;
 
 
   // svgRects = document.getElementsByTagName('rect');
@@ -105,11 +112,12 @@ function setup() {
   balloonImg = loadImage('balloon.png');
   afferImg = loadImage('AffeR.png');
   affelImg = loadImage('AffeL.png');
+  buchImg = loadImage('buch.png');
 
   //add bodies
   ball = new SpriteBall(world, {
-    x: 70,
-    y: 220,
+    x: 50,
+    y: 285,
     r: 20,
     image: kopfImg
   }, {
@@ -120,21 +128,32 @@ function setup() {
   kugel = new Ball(world, {
     x: -80,
     y: 100,
-    r: 10,
-    color: 'red'
+    r: 20,
+    color: 'gold'
   }, {
-    friction: 0.001
+    friction: 0.001,
+    mass: 3
   });
 
   ground = new Block(world, {
-    x: - 100,
-    y: 180,
-    w: 200,
+    x: -70,
+    y: 250,
+    w: 250,
     h: 15,
     color: 'red'
   }, {
     isStatic: true,
     angle: 145
+  });
+
+  ground2 = new Block(world, {
+    x: 50,
+    y: 305,
+    w: 30,
+    h: 15,
+    color: 'red'
+  }, {
+    isStatic: true
   });
 
   //add Tatzen(Bär)
@@ -144,7 +163,7 @@ function setup() {
     w: 39,
     h: 36,
     image: tatzelImg
-  },{
+  }, {
     isStatic: true
   });
 
@@ -154,52 +173,64 @@ function setup() {
     w: 42,
     h: 34,
     image: tatzerImg
-  },{
+  }, {
     isStatic: true
   });
 
-  balloon = new SpriteBlock(world, {
-  x: 2245,
-  y: 320,
-  w: 87,
-  h: 40,
-  color: 'yellow',
-  image: balloonImg
-}, {
-  isStatic: true,
-});
+  clown = new SpriteBlock(world, {
+    x: 2060,
+    y: 443,
+    w: 85,
+    h: 85,
+    color: 'red',
+    image: clownImg
+  }, {
+    isStatic: true,
+    restitution: 2
+  });
 
-clown = new SpriteBlock(world, {
-  x: 2060,
-  y: 443,
-  w: 85,
-  h: 85,
-  color: 'red',
-  image: clownImg
-}, {
-  isStatic: true,
-  restitution: 4
-});
+  affeL = new Block(world, {
+    x: 4290,
+    y: 480,
+    w: 22,
+    h: 181,
+    image: affelImg,
+    color: 'red'
+  }, {
+    isStatic: true
+  });
 
-affeL = new SpriteBlock(world, {
-  x: 4120,
-  y: 480,
-  w: 39,
-  h: 36,
-  image: affelImg
-},{
-  isStatic: true
-});
+  affeR = new Block(world, {
+    x: 4400,
+    y: 480,
+    w: 22,
+    h: 169,
+    image: afferImg,
+    color: 'red'
+  }, {
+    isStatic: true
+  });
 
-affeR = new SpriteBlock(world, {
-  x: 4226,
-  y: 480,
-  w: 42,
-  h: 34,
-  image: afferImg
-},{
-  isStatic: true
-});
+  korb = new PolygonSpriteFromSVG(world, {
+    x: 2245,
+    y: 500,
+    file: './korb.svg',
+    scale: 1,
+    image: balloonImg
+  }, {
+    isStatic: true,
+  });
+
+  buch = new SpriteBlock(world, {
+    x: 3793,
+    y: 70,
+    w: 208,
+    h: 10,
+    image: buchImg
+  }, {
+    isStatic: true
+  });
+
 
   //setup mouse
   mouse = new Mouse(engine, canvas);
@@ -221,51 +252,78 @@ affeR = new SpriteBlock(world, {
 }
 
 //Funktionen Bewegungen
-function tatzeLMove(){
-let oscillatePosY = tatzeL.body.position.y + Math.sin(frameCount * 0.06) * 2;
+function tatzeLMove() {
+  let oscillatePosY = tatzeL.body.position.y + Math.sin(frameCount * 0.06) * 2;
   Matter.Body.setPosition(
-    tatzeL.body,
-    {x: tatzeL.body.position.x, y: oscillatePosY}
+    tatzeL.body, {
+      x: tatzeL.body.position.x,
+      y: oscillatePosY
+    }
   );
 }
 
-function tatzeRMove(){
-let oscillatePosY = tatzeR.body.position.y + Math.cos(frameCount * 0.06) * 2;
+function tatzeRMove() {
+  let oscillatePosY = tatzeR.body.position.y + Math.cos(frameCount * 0.06) * 2;
   Matter.Body.setPosition(
-    tatzeR.body,
-    {x: tatzeR.body.position.x, y: oscillatePosY}
+    tatzeR.body, {
+      x: tatzeR.body.position.x,
+      y: oscillatePosY
+    }
   );
 }
 
-function balloonMove(){
-let oscillatePosX = balloon.body.position.x + Math.sin(frameCount * 0.007) * 2.3;
+//moveBlock geht nur für horizontale Bewegungen, da wir auch ein paar funktionen mit cos statt sin
+//haben macht es nicht so viel sinn nochmal alles umzuschreiben
+
+function moveBlock(block, f1, f2) {
+  if (block.body) {
+    let oscillatePosX = block.body.position.x + Math.sin(frameCount * f1) * f2;
+    Matter.Body.setPosition(
+      block.body, {
+        x: oscillatePosX,
+        y: block.body.position.y
+      }
+    );
+  }
+}
+
+function clownMove() {
+  let oscillatePosY = clown.body.position.y + Math.sin(frameCount * 0.03) * 2.5;
   Matter.Body.setPosition(
-    balloon.body,
-    {x: oscillatePosX, y: balloon.body.position.y}
+    clown.body, {
+      x: clown.body.position.x,
+      y: oscillatePosY
+    }
   );
 }
 
-function clownMove(){
-let oscillatePosY = clown.body.position.y + Math.sin(frameCount * 0.03) * 2.5;
+function buchMove() {
+  let oscillatePosY = buch.body.position.y + Math.sin(frameCount * 0.008) * 1.7;
   Matter.Body.setPosition(
-    clown.body,
-    {x: clown.body.position.x, y: oscillatePosY}
+    buch.body, {
+      x: buch.body.position.x,
+      y: oscillatePosY
+    }
   );
 }
 
-function affeLMove(){
-let oscillatePosX = affeL.body.position.x + Math.sin(frameCount * 0.07) * 2;
+function affeLMove() {
+  let oscillatePosX = affeL.body.position.x + Math.sin(frameCount * 0.07) * 2;
   Matter.Body.setPosition(
-    affeL.body,
-    {x: oscillatePosX, y: affeL.body.position.y}
+    affeL.body, {
+      x: oscillatePosX,
+      y: affeL.body.position.y
+    }
   );
 }
 
-function affeRMove(){
-let oscillatePosX = affeR.body.position.x + Math.cos(frameCount * 0.07) * 2;
+function affeRMove() {
+  let oscillatePosX = affeR.body.position.x + Math.cos(frameCount * 0.07) * 2;
   Matter.Body.setPosition(
-    affeR.body,
-    {x: oscillatePosX, y: affeR.body.position.y}
+    affeR.body, {
+      x: oscillatePosX,
+      y: affeR.body.position.y
+    }
   );
 }
 
@@ -278,7 +336,7 @@ function keyPressed(e) {
         y: ball.body.position.y
       }, {
         x: 0.008,
-        y: -0.035 
+        y: -0.035
       });
   }
 
@@ -288,38 +346,41 @@ function keyPressed(e) {
   }
 }
 
-//Zeichnet alle Objekte
+
 function draw() {
   clear();
-  ground.draw();
+  //ground.draw();
+  //ground2.draw();
+
   ball.draw();
   kugel.draw();
+
   tatzeL.draw();
   tatzeR.draw();
-  balloon.draw();
+  korb.draw();
   clown.draw();
   affeL.draw();
   affeR.draw();
+  buch.draw();
 
   mouse.draw();
 
   for (let b of blocks) {
-     b.draw();
+    //b.draw();
+  }
+  for (let s of slides) {
+    s.draw();
   }
 
-  for (let s of slides) {
-  s.draw();
-}
-
-//Call functions!!
-tatzeLMove();
-tatzeRMove();
-balloonMove();
-clownMove();
-affeLMove();
-affeRMove();
-
-//scrollFollow(ball);
+  //Call functions!!
+  tatzeLMove();
+  tatzeRMove();
+  moveBlock(korb, 0.007, 2.3);
+  clownMove();
+  buchMove();
+  affeLMove();
+  affeRMove();
+  scrollFollow(ball);
 
 }
 
@@ -328,7 +389,7 @@ function scrollFollow(object) {
     const $element = $('html, body');
     if ($element.is(':animated') == false) {
       $element.animate({
-        scrollLeft: object.body.position.x-100,
+        scrollLeft: object.body.position.x - 100,
         scrollRight: object.body.position.y
       }, 750);
     }
@@ -339,9 +400,9 @@ function insideViewport(object) {
   const x = object.body.position.x;
   const y = object.body.position.y;
   const pageXOffset = window.pageXOffset || document.documentElement.scrollLeft;
-  const pageYOffset  = window.pageYOffset || document.documentElement.scrollTop;
+  const pageYOffset = window.pageYOffset || document.documentElement.scrollTop;
   if (x >= pageXOffset && x <= pageXOffset + windowWidth &&
-      y >= pageYOffset && y <= pageYOffset + windowHeight) {
+    y >= pageYOffset && y <= pageYOffset + windowHeight) {
     return true;
   } else {
     return false;
