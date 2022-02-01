@@ -62,3 +62,36 @@ function draw() {
   mouse.draw();
   platformMove();
 }
+
+// svgRects = document.getElementsByTagName('rect');
+// for (let r=0; r<svgRects.length;r++) {
+//   let w = +svgRects[r].getAttribute('width');
+//   let h = +svgRects[r].getAttribute('height');
+
+// let rectAngle = svgRects[r].getAttribute('transform')
+// let angleString;
+// if(rectAngle != null) {
+//   angleString = rectAngle.substring(7,13)
+// } else {
+//   anglString = 0
+// }
+
+//if svgRects[bestimmtes r] dann soll angle (per hand eingegebener wert) sein
+
+// console.log(svgRects[r]);
+// console.log(r);
+// console.log(angleString);
+// console.log(typeof(rectAngle));
+
+// blocks.push(new BlockCore(
+//   world,
+//   {
+//     x: +svgRects[r].getAttribute('x') + w / 2,
+//     y: +svgRects[r].getAttribute('y') + h / 2,
+//     w: w,
+//     h: h,
+//     color: 'blue'
+//   },
+//   { isStatic: true
+//     angle: angleString }
+// ));

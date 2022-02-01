@@ -70,40 +70,6 @@ function setup() {
   //Blocks[18] soll höhere Restitution bekommen
   blocks[18].body.restitution = 10;
 
-
-  // svgRects = document.getElementsByTagName('rect');
-  // for (let r=0; r<svgRects.length;r++) {
-  //   let w = +svgRects[r].getAttribute('width');
-  //   let h = +svgRects[r].getAttribute('height');
-
-  // let rectAngle = svgRects[r].getAttribute('transform')
-  // let angleString;
-  // if(rectAngle != null) {
-  //   angleString = rectAngle.substring(7,13)
-  // } else {
-  //   anglString = 0
-  // }
-
-  //if svgRects[bestimmtes r] dann soll angle (per hand eingegebener wert) sein
-
-  // console.log(svgRects[r]);
-  // console.log(r);
-  // console.log(angleString);
-  // console.log(typeof(rectAngle));
-
-  // blocks.push(new BlockCore(
-  //   world,
-  //   {
-  //     x: +svgRects[r].getAttribute('x') + w / 2,
-  //     y: +svgRects[r].getAttribute('y') + h / 2,
-  //     w: w,
-  //     h: h,
-  //     color: 'blue'
-  //   },
-  //   { isStatic: true
-  //     angle: angleString }
-  // ));
-
   //load images
   kopfImg = loadImage('kopf.png');
   tatzelImg = loadImage('TatzeL.png');
@@ -189,24 +155,22 @@ function setup() {
     restitution: 2
   });
 
-  affeL = new Block(world, {
+  affeL = new SpriteBlock(world, {
     x: 4290,
     y: 480,
     w: 22,
     h: 181,
-    image: affelImg,
-    color: 'red'
+    image: affelImg
   }, {
     isStatic: true
   });
 
-  affeR = new Block(world, {
+  affeR = new SpriteBlock(world, {
     x: 4400,
     y: 480,
     w: 22,
     h: 169,
-    image: afferImg,
-    color: 'red'
+    image: afferImg
   }, {
     isStatic: true
   });
@@ -369,7 +333,7 @@ function draw() {
     //b.draw();
   }
   for (let s of slides) {
-    s.draw();
+    //s.draw();
   }
 
   //Call functions!!
@@ -389,7 +353,7 @@ function scrollFollow(object) {
     const $element = $('html, body');
     if ($element.is(':animated') == false) {
       $element.animate({
-        scrollLeft: object.body.position.x - 100,
+        scrollLeft: object.body.position.x - 200,
         scrollRight: object.body.position.y
       }, 750);
     }
